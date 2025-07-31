@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -139,6 +139,17 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> getProductsByName(String name) {
         return productRepository.findByName(name);
+    }
+
+    @Override
+    public List<Product> findDistinctProductsByName(){
+        List<Product> products = getAllProduct();
+        Map<String, Product> distinctProductMap = products.stream()
+                .collect(Collectors.toMap(
+                        Product :: getName,
+                        product -> product,
+                        (existing, replacement) -> existing));
+        return new ArrayList<>(distinctProductMap.values());
     }
 
     @Override
