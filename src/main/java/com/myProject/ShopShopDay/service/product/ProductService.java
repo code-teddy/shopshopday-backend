@@ -112,7 +112,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> getAllProduct() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
@@ -143,7 +143,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> findDistinctProductsByName(){
-        List<Product> products = getAllProduct();
+        List<Product> products = getAllProducts();
         Map<String, Product> distinctProductMap = products.stream()
                 .collect(Collectors.toMap(
                         Product :: getName,

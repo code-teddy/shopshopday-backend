@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts(){
-        List<Product> products = productService.getAllProduct();
+        List<Product> products = productService.getAllProducts();
         List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
         return ResponseEntity.ok(new ApiResponse("Found!", convertedProducts));
     }
@@ -94,7 +94,7 @@ public class ProductController {
         return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
     }
 
-    @GetMapping("distinct/products")
+    @GetMapping("/distinct/products")
     public ResponseEntity<ApiResponse> getDistinctProductsByName(){
         List<Product> products = productService.findDistinctProductsByName();
         List<ProductDto> productDtos = productService.getConvertedProducts(products);
