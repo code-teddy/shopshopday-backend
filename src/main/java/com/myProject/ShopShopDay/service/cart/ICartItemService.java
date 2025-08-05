@@ -1,13 +1,13 @@
 package com.myProject.ShopShopDay.service.cart;
 
+import com.myProject.ShopShopDay.dtos.CartItemDto;
 import com.myProject.ShopShopDay.model.CartItem;
 
 public interface ICartItemService {
-    void addItemToCart(Long cardId, Long productId, int Quantity);
+    CartItem addItemToCart(Long cartId, Long productId, int quantity);
+    void removeItemFromCart(Long cartId, Long productId);
+    void updateItemQuantity(Long cartId, Long productId, int quantity);
+    CartItem getCartItem(Long cartId, Long productId);
 
-    void removeItemFromCart(Long cardId, Long productId);
-
-    void updateItemQuantity(Long cardId, Long productId, int Quantity);
-
-    CartItem getCartItem(Long cardId, Long productId);
+    CartItemDto convertToDto(CartItem cartItem);
 }
