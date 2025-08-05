@@ -6,9 +6,7 @@ import com.myProject.ShopShopDay.request.AddProductRequest;
 import com.myProject.ShopShopDay.request.ProductUpdateRequest;
 import com.myProject.ShopShopDay.response.ApiResponse;
 import com.myProject.ShopShopDay.service.product.IProductService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,45 +16,40 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
-
     private final IProductService productService;
 
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse> getAllProducts(){
+    public ResponseEntity<ApiResponse> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
-        return ResponseEntity.ok(new ApiResponse("Found!", convertedProducts));
+        return ResponseEntity.ok(new ApiResponse("Found", convertedProducts));
     }
 
-    @GetMapping("/product/{productId}/product")
-    public ResponseEntity<ApiResponse> getProductsById(@PathVariable Long productId){
-        try {
-            Product product = productService.getProductById(productId);
-            ProductDto productDto = productService.convertToDto(product);
-            return ResponseEntity.ok(new ApiResponse("Found!", productDto));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Oops!", e.getMessage()));
-        }
+    @GetMapping("product/{productId}/product")
+    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
+        Product product = productService.getProductById(productId);
+        ProductDto productDto = productService.convertToDto(product);
+        return ResponseEntity.ok(new ApiResponse("Found", productDto));
     }
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
         Product theProduct = productService.addProduct(product);
         ProductDto productDto = productService.convertToDto(theProduct);
-        return ResponseEntity.ok(new ApiResponse("Add product success!", productDto));
+        return ResponseEntity.ok(new ApiResponse("Add product success", productDto));
     }
 
     @PutMapping("/product/{productId}/update")
-    public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId){
+    public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
         Product theProduct = productService.updateProduct(request, productId);
         ProductDto productDto = productService.convertToDto(theProduct);
-        return ResponseEntity.ok(new ApiResponse("Update product success!", productDto));
+        return ResponseEntity.ok(new ApiResponse("Update product success", productDto));
     }
 
     @DeleteMapping("/product/{productId}/delete")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
         productService.deleteProductById(productId);
-        return ResponseEntity.ok(new ApiResponse("Delete product success!", productId));
+        return ResponseEntity.ok(new ApiResponse("Delete product success", productId));
     }
 
     @GetMapping("/products/by/brand-and-name")
@@ -87,17 +80,29 @@ public class ProductController {
         return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
     }
 
-    @GetMapping("/product/{category}/all/products")
+    @GetMapping("/{category}/products")
     public ResponseEntity<ApiResponse> findProductsByCategory(@PathVariable String category) {
         List<Product> products = productService.getProductsByCategory(category);
         List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
         return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
     }
 
+    @GetMapping("/category/{categoryId}/products")
+    public ResponseEntity<ApiResponse> findProductsByCategoryId(@PathVariable Long categoryId) {
+        List<Product> products = productService.getProductsByCategoryId(categoryId);
+        List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+        return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
+    }
+
     @GetMapping("/distinct/products")
-    public ResponseEntity<ApiResponse> getDistinctProductsByName(){
+    public ResponseEntity<ApiResponse> getDistinctProductsByName() {
         List<Product> products = productService.findDistinctProductsByName();
         List<ProductDto> productDtos = productService.getConvertedProducts(products);
         return ResponseEntity.ok(new ApiResponse("Found", productDtos));
+    }
+
+    @GetMapping("/distinct/brands")
+    public ResponseEntity<ApiResponse> getDistinctBrands() {
+        return ResponseEntity.ok(new ApiResponse("Found", productService.getAllDistinctBrands()));
     }
 }
