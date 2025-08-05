@@ -1,11 +1,13 @@
 package com.myProject.ShopShopDay.service.cart;
 
+import com.myProject.ShopShopDay.dtos.CartDto;
 import com.myProject.ShopShopDay.model.Cart;
 import com.myProject.ShopShopDay.model.User;
 import com.myProject.ShopShopDay.repository.CartItemRepository;
 import com.myProject.ShopShopDay.repository.CartRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class CartService implements ICartService{
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final ModelMapper mapper;
 
     @Override
     public Cart getCart(Long cartId) {
@@ -54,4 +57,10 @@ public class CartService implements ICartService{
         Cart cart = getCart(cartId);
         return cart.getTotalAmount();
     }
+
+    @Override
+    public CartDto convertToDto(Cart cart){
+        return mapper.map(cart, CartDto.class);
+    }
+
 }

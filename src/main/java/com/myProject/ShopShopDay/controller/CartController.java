@@ -1,5 +1,6 @@
 package com.myProject.ShopShopDay.controller;
 
+import com.myProject.ShopShopDay.dtos.CartDto;
 import com.myProject.ShopShopDay.model.Cart;
 import com.myProject.ShopShopDay.response.ApiResponse;
 import com.myProject.ShopShopDay.service.cart.ICartItemService;
@@ -20,7 +21,8 @@ public class CartController {
     @GetMapping("/user/{userId}/cart")
     public ResponseEntity<ApiResponse> getUserCart(@PathVariable Long userId){
         Cart cart = cartService.getCartByUserId(userId);
-        return ResponseEntity.ok(new ApiResponse("Success", cart));
+        CartDto cartDto = cartService.convertToDto(cart);
+        return ResponseEntity.ok(new ApiResponse("Success", cartDto));
     }
 
     @DeleteMapping("/cart/{cartId}/clear")

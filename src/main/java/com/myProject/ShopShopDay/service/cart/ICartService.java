@@ -1,5 +1,6 @@
 package com.myProject.ShopShopDay.service.cart;
 
+import com.myProject.ShopShopDay.dtos.CartDto;
 import com.myProject.ShopShopDay.model.Cart;
 import com.myProject.ShopShopDay.model.User;
 
@@ -15,4 +16,6 @@ public interface ICartService {
     Cart initializeNewCartForUser(User user);
 
     BigDecimal getTotalPrice(Long cartId);
+
+    CartDto convertToDto(Cart cart);
 }
