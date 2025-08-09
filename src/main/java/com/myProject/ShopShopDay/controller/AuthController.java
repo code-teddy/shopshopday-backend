@@ -28,10 +28,10 @@ import java.util.Map;
 public class AuthController {
     private final JwtUtils jwtUtils;
     private final CookieUtils cookieUtils;
-    private final ShopUserDetailsService shopUserDetailsService;
+    private final ShopUserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
 
-    @Value(("${auth.token.refreshExpirationInMils}"))
+    @Value("${auth.token.refreshExpirationInMils}")
     private Long refreshTokenExpirationTime;
 
     @PostMapping("/login")
@@ -39,34 +39,35 @@ public class AuthController {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         String accessToken = jwtUtils.generateAccessTokenForUser(authentication);
-        String reFreshToken = jwtUtils.generateRefreshToken(request.getEmail());
-        cookieUtils.addRefreshTokenCookie(response, reFreshToken, refreshTokenExpirationTime);
+        String refreshToken = jwtUtils.generateRefreshToken(request.getEmail());
+        cookieUtils.addRefreshTokenCookie(response, refreshToken, refreshTokenExpirationTime);
         Map<String, String> token = new HashMap<>();
         token.put("accessToken", accessToken);
         return ResponseEntity.ok(token);
     }
 
+
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshAccessToken(HttpServletRequest request){
         cookieUtils.logCookies(request);
         String refreshToken = cookieUtils.getRefreshTokenFromCookies(request);
-        if(refreshToken != null){
+        if (refreshToken != null){
             boolean isValid = jwtUtils.validateToken(refreshToken);
-            if(isValid){
-                String userNameFromToken = jwtUtils.getUsernameFromToken(refreshToken);
-                UserDetails userDetails = shopUserDetailsService.loadUserByUsername(userNameFromToken);
+            if (isValid){
+                String usernameFromToken = jwtUtils.getUsernameFromToken(refreshToken);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(usernameFromToken);
                 String newAccessToken = jwtUtils.generateAccessTokenForUser(
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
-                if(newAccessToken != null){
+                if (newAccessToken != null){
                     Map<String, String> token = new HashMap<>();
                     token.put("accessToken", newAccessToken);
                     return ResponseEntity.ok(token);
-                } else {
+                }else {
                     return ResponseEntity.status(500).body("Error generating new access token");
                 }
-
             }
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid or expired access token");
     }
+
 }

@@ -24,7 +24,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private  Product product;
 
     public OrderItem(Order order, Product product, BigDecimal price, int quantity) {
         this.order = order;

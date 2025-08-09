@@ -28,39 +28,36 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-
 public class ShopConfig {
     @Value("${api.prefix}")
     private static String API;
-    private  final List<String> SECURED_URLS =
+    private static final List<String> SECURED_URLS =
             List.of(API + "/carts/**", API + "/cartItems/**", API + "/orders/**");
-
     private final ShopUserDetailsService userDetailsService;
     private final JwtEntryPoint authEntryPoint;
 
     @Bean
-    public ModelMapper modelMapper()
-    {
+    public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
-        return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
-    public AuthTokenFilter authTokenFilter(){
+    public AuthTokenFilter authTokenFilter() {
         return new AuthTokenFilter();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -87,7 +84,7 @@ public class ShopConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**") // Apply to all endpoints
-                        .allowedOrigins("http://localhost:5100") // Allow this origin
+                        .allowedOrigins("http://localhost:5174") // Allow this origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these HTTP methods
                         .allowedHeaders("*") // Allow all headers
                         .allowCredentials(true); // Allow credentials

@@ -29,8 +29,8 @@ public class imageService implements IImageService {
     }
 
     @Override
-    public void deleteImageById(Long imageID) {
-        imageRepository.findById(imageID).ifPresentOrElse(imageRepository::delete, () -> {
+    public void deleteImageById(Long imageId) {
+        imageRepository.findById(imageId).ifPresentOrElse(imageRepository::delete, () -> {
             throw new EntityNotFoundException("Image not found!");
         });
     }

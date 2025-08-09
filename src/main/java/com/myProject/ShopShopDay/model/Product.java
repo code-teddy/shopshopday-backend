@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Product {
 
@@ -39,5 +38,7 @@ public class Product {
         this.inventory = inventory;
         this.description = description;
         this.category = category;
+
+
     }
 }

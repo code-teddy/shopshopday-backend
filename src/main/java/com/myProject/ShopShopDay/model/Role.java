@@ -8,11 +8,10 @@ import lombok.Setter;
 import java.util.Collection;
 import java.util.HashSet;
 
-@Setter
-@Getter
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
-
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/carts")
 public class CartController {
-    private final ICartItemService cartItemService;
-    private final IUserService userService;
     private final ICartService cartService;
 
     @GetMapping("/user/{userId}/cart")
@@ -30,3 +28,4 @@ public class CartController {
         cartService.clearCart(cartId);
     }
 }
+

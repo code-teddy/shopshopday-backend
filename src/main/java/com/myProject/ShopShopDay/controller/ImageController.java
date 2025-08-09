@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/images")
 public class ImageController {
+
     private final IImageService imageService;
 
     @PostMapping("/upload")
@@ -47,6 +48,7 @@ public class ImageController {
         imageService.updateImage(file, imageId);
         return ResponseEntity.ok(new ApiResponse("Image updated successfully!", null));
     }
+
 
     @DeleteMapping("/image/{imageId}/delete")
     public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId) {

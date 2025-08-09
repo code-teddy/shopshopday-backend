@@ -16,16 +16,18 @@ import java.util.List;
 public class OrderController {
     private final IOrderService orderService;
 
-    @PostMapping("/user/order")
-    public ResponseEntity<ApiResponse> placeOrder(@RequestParam Long userId){
+    @PostMapping("/user/{userId}/place-order")
+    public ResponseEntity<ApiResponse> placeOrder(@PathVariable Long userId){
         Order order = orderService.placeOrder(userId);
-        OrderDto orderDto = orderService.convertToDto(order);
-        return ResponseEntity.ok(new ApiResponse("Order placed successfully", orderDto));
+        OrderDto orderDto =  orderService.convertToDto(order);
+        return ResponseEntity.ok(new ApiResponse("Order placed successfully!", orderDto));
     }
+    //Assignment 6
+    // Create an order DTO to return a user orders;
 
-    @GetMapping("/user/{userId}/order")
-    public ResponseEntity<ApiResponse> getUserOrder(@PathVariable Long userId){
+    @GetMapping("/user/{userId}/orders")
+    private ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long userId){
         List<OrderDto> orders = orderService.getUserOrders(userId);
-        return ResponseEntity.ok(new ApiResponse("Success", orders));
+        return ResponseEntity.ok(new ApiResponse("Success!", orders));
     }
 }

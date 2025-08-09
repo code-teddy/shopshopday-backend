@@ -18,6 +18,7 @@ import java.util.List;
 public class ProductController {
     private final IProductService productService;
 
+
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
         List<Product> products = productService.getAllProducts();
@@ -29,27 +30,27 @@ public class ProductController {
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
         Product product = productService.getProductById(productId);
         ProductDto productDto = productService.convertToDto(product);
-        return ResponseEntity.ok(new ApiResponse("Found", productDto));
+        return ResponseEntity.ok(new ApiResponse("Found!", productDto));
     }
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
         Product theProduct = productService.addProduct(product);
         ProductDto productDto = productService.convertToDto(theProduct);
-        return ResponseEntity.ok(new ApiResponse("Add product success", productDto));
+        return ResponseEntity.ok(new ApiResponse("Add product success!", productDto));
     }
 
     @PutMapping("/product/{productId}/update")
     public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
         Product theProduct = productService.updateProduct(request, productId);
         ProductDto productDto = productService.convertToDto(theProduct);
-        return ResponseEntity.ok(new ApiResponse("Update product success", productDto));
+        return ResponseEntity.ok(new ApiResponse("Update product success!", productDto));
     }
 
     @DeleteMapping("/product/{productId}/delete")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
         productService.deleteProductById(productId);
-        return ResponseEntity.ok(new ApiResponse("Delete product success", productId));
+        return ResponseEntity.ok(new ApiResponse("Delete product success!", productId));
     }
 
     @GetMapping("/products/by/brand-and-name")

@@ -15,14 +15,15 @@ import java.util.Map;
 
 @Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         final Map<String, Object> body = new HashMap<>();
-        body.put("Error: ", "Unauthorized");
-        body.put("Message: ", "Invalid credentials");
+        body.put("Error :", "Unauthorized");
+        body.put("Message :", "Invalid credentials");
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
     }

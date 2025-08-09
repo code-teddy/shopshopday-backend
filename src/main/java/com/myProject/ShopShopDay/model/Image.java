@@ -8,12 +8,13 @@ import lombok.Setter;
 
 import java.sql.Blob;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,3 +27,5 @@ public class Image {
     @JoinColumn(name = "product_id")
     private Product product;
 }
+
+

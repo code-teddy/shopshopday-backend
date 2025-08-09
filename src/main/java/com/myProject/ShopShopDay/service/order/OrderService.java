@@ -12,6 +12,7 @@ import com.myProject.ShopShopDay.service.cart.ICartService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,17 +21,19 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService{
+public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ICartService cartService;
     private final ModelMapper modelMapper;
 
+
+    @Transactional
     @Override
     public Order placeOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
         Order order = createOrder(cart);
-        List<OrderItem> orderItemList = createOrderItem(order, cart);
+        List<OrderItem> orderItemList = createOrderItems(order, cart);
         order.setOrderItems(new HashSet<>(orderItemList));
         order.setTotalAmount(calculateTotalAmount(orderItemList));
         Order savedOrder = orderRepository.save(order);
@@ -38,7 +41,7 @@ public class OrderService implements IOrderService{
         return savedOrder;
     }
 
-    private Order createOrder(Cart cart){
+    private Order createOrder(Cart cart) {
         Order order = new Order();
         order.setUser(cart.getUser());
         order.setOrderStatus(OrderStatus.PENDING);
@@ -46,14 +49,7 @@ public class OrderService implements IOrderService{
         return order;
     }
 
-    private BigDecimal calculateTotalAmount(List<OrderItem> orderItemList){
-        return orderItemList.stream()
-                .map(item -> item.getPrice()
-                        .multiply(new BigDecimal(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private List<OrderItem> createOrderItem(Order order, Cart cart){
+    private List<OrderItem> createOrderItems(Order order, Cart cart) {
         return cart.getItems().stream().map(cartItem -> {
             Product product = cartItem.getProduct();
             product.setInventory(product.getInventory() - cartItem.getQuantity());
@@ -66,6 +62,14 @@ public class OrderService implements IOrderService{
         }).toList();
     }
 
+    private BigDecimal calculateTotalAmount(List<OrderItem> orderItemList) {
+        return orderItemList.stream()
+                .map(item -> item.getPrice()
+                        .multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
     @Override
     public List<OrderDto> getUserOrders(Long userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
@@ -76,5 +80,4 @@ public class OrderService implements IOrderService{
     public OrderDto convertToDto(Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
-
 }

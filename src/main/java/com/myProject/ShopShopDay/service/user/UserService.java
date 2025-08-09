@@ -2,6 +2,7 @@ package com.myProject.ShopShopDay.service.user;
 
 import com.myProject.ShopShopDay.dtos.UserDto;
 import com.myProject.ShopShopDay.model.User;
+import com.myProject.ShopShopDay.repository.AddressRepository;
 import com.myProject.ShopShopDay.repository.UserRepository;
 import com.myProject.ShopShopDay.request.CreateUserRequest;
 import com.myProject.ShopShopDay.request.UserUpdateRequest;
@@ -22,6 +23,7 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AddressRepository addressRepository;
 
     @Override
     public User createUser(CreateUserRequest request) {
@@ -33,7 +35,16 @@ public class UserService implements IUserService {
                     user.setLastName(request.getLastName());
                     user.setEmail(request.getEmail());
                     user.setPassword(passwordEncoder.encode(request.getPassword()));
-                    return userRepository.save(user);
+                    User savedUser = userRepository.save(user);
+
+                    Optional.ofNullable(req.getAddressList()).ifPresent(addressList -> {
+                        addressList.forEach(address -> {
+                            address.setUser(savedUser);
+                            addressRepository.save(address);
+
+                        });
+                    });
+                    return savedUser;
                 }).orElseThrow(() -> new EntityExistsException("Oops! " + request.getEmail() + " already exists!"));
     }
 
@@ -43,7 +54,7 @@ public class UserService implements IUserService {
             existingUser.setFirstName(request.getFirstName());
             existingUser.setLastName(request.getLastName());
             return userRepository.save(existingUser);
-        }).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        }).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     @Override
@@ -65,11 +76,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getAuthenticatedUser(){
+    public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return Optional.ofNullable(userRepository.findByEmail(email))
                 .orElseThrow(() -> new EntityNotFoundException("Log in required!"));
-
     }
 }

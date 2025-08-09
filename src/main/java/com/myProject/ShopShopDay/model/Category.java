@@ -8,10 +8,10 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Setter
 @Getter
-@Entity
+@Setter
 @NoArgsConstructor
+@Entity
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,3 +25,4 @@ public class Category {
         this.name = name;
     }
 }
+

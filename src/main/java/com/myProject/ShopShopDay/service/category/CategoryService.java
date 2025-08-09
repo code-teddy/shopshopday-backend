@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements ICategoryService{
+public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
     public Category addCategory(Category category) {
         return Optional.of(category)
                 .filter(c -> !categoryRepository.existsByName(c.getName()))
-                .map(categoryRepository :: save)
+                .map(categoryRepository::save)
                 .orElseThrow(() -> new EntityExistsException(category.getName() + " already exists!"));
     }
 
@@ -28,13 +28,13 @@ public class CategoryService implements ICategoryService{
         return Optional.ofNullable(findCategoryById(categoryId)).map(oldCategory -> {
             oldCategory.setName(category.getName());
             return categoryRepository.save(oldCategory);
-        }).orElseThrow(() -> new EntityNotFoundException("Category Not found!"));
+        }).orElseThrow(() -> new EntityNotFoundException("Category not found!"));
     }
 
     @Override
     public void deleteCategory(Long categoryId) {
         categoryRepository.findById(categoryId)
-                .ifPresentOrElse(categoryRepository :: delete, () ->{
+                .ifPresentOrElse(categoryRepository::delete, () -> {
                     throw new EntityNotFoundException("Category not found!");
                 });
     }

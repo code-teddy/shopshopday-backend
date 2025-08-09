@@ -15,10 +15,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CartService implements ICartService{
+public class CartService implements ICartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ModelMapper mapper;
+
 
     @Override
     public Cart getCart(Long cartId) {
@@ -34,6 +35,7 @@ public class CartService implements ICartService{
         return cartRepository.findByUserId(userId);
     }
 
+
     @Override
     public void clearCart(Long cartId) {
         Cart cart = getCart(cartId);
@@ -41,6 +43,7 @@ public class CartService implements ICartService{
         cart.clearCart();
         cartRepository.deleteById(cartId);
     }
+
 
     @Override
     public Cart initializeNewCartForUser(User user) {

@@ -11,10 +11,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
 @Getter
-@Entity
+@Setter
 @NoArgsConstructor
+@Entity
 @Table(name = "orders")
 public class Order {
 
