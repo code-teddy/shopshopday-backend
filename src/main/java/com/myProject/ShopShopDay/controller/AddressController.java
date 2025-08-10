@@ -17,11 +17,11 @@ public class AddressController {
 
     private final IAddressService addressService;
 
-    @PostMapping("/new")
-    public ResponseEntity<ApiResponse> createAddresses(@RequestBody List<Address> addresses) {
-        List<Address> addressList = addressService.createAddress(addresses);
+    @PostMapping("/{userId}/new")
+    public ResponseEntity<ApiResponse> createAddresses(@RequestBody List<Address> addresses, @PathVariable Long userId) {
+        List<Address> addressList = addressService.createAddress(addresses, userId);
         List<AddressDto> addressDto = addressService.convertToDto(addressList);
-        return ResponseEntity.ok(new ApiResponse("Success!", addressDto));
+        return ResponseEntity.ok(new ApiResponse("Address added successfully!", addressDto));
     }
 
     @GetMapping("/{userId}/address")
@@ -42,34 +42,12 @@ public class AddressController {
     public ResponseEntity<ApiResponse> updateAddress(@PathVariable Long id, @RequestBody Address address) {
         Address updatedAddress = addressService.updateAddress(id, address);
         AddressDto addressDto = addressService.convertToDto(updatedAddress);
-        return ResponseEntity.ok(new ApiResponse("Success!", addressDto));
+        return ResponseEntity.ok(new ApiResponse("Address updated Successfully!", addressDto));
     }
 
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<ApiResponse> deleteAddress(@PathVariable Long id) {
         addressService.deleteAddress(id);
-        return ResponseEntity.ok(new ApiResponse("Address deleted", null));
+        return ResponseEntity.ok(new ApiResponse("Address deleted successfully", id));
     }
 }
-
-
-
-  /* "addressList" : [
-    {
-        "country": "USA",
-        "state": "California",
-        "city": "Los Angeles",
-        "street": "123 Main St",
-        "addressType": "HOME"
-    },
-    {
-        "country": "USA",
-        "state": "California",
-        "city": "San Francisco",
-        "street": "456 Market St",
-        "addressType": "OFFICE"
-    }
-]
-
-
-*/

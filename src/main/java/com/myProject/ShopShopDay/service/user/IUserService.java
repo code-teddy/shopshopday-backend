@@ -18,4 +18,3 @@ public interface IUserService {
 
     User getAuthenticatedUser();
 }
-

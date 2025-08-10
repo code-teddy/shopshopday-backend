@@ -35,7 +35,7 @@ public class AuthController {
     private Long refreshTokenExpirationTime;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest request, HttpServletResponse response){
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest request, HttpServletResponse response) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         String accessToken = jwtUtils.generateAccessTokenForUser(authentication);
@@ -48,21 +48,21 @@ public class AuthController {
 
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshAccessToken(HttpServletRequest request){
+    public ResponseEntity<?> refreshAccessToken(HttpServletRequest request) {
         cookieUtils.logCookies(request);
         String refreshToken = cookieUtils.getRefreshTokenFromCookies(request);
-        if (refreshToken != null){
+        if (refreshToken != null) {
             boolean isValid = jwtUtils.validateToken(refreshToken);
-            if (isValid){
+            if (isValid) {
                 String usernameFromToken = jwtUtils.getUsernameFromToken(refreshToken);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(usernameFromToken);
                 String newAccessToken = jwtUtils.generateAccessTokenForUser(
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
-                if (newAccessToken != null){
+                if (newAccessToken != null) {
                     Map<String, String> token = new HashMap<>();
                     token.put("accessToken", newAccessToken);
                     return ResponseEntity.ok(token);
-                }else {
+                } else {
                     return ResponseEntity.status(500).body("Error generating new access token");
                 }
             }

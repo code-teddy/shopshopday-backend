@@ -3,23 +3,32 @@ package com.myProject.ShopShopDay.service.address;
 import com.myProject.ShopShopDay.dtos.AddressDto;
 import com.myProject.ShopShopDay.model.Address;
 import com.myProject.ShopShopDay.repository.AddressRepository;
+import com.myProject.ShopShopDay.service.user.IUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AddressService implements IAddressService {
     private final AddressRepository addressRepository;
+    private final IUserService userService;
     private final ModelMapper modelMapper;
 
 
     @Override
-    public List<Address> createAddress(List<Address> addressList) {
-        return addressRepository.saveAll(addressList);
+    public List<Address> createAddress(List<Address> addressList, Long userId) {
+        return Optional.ofNullable(userService.getUserById(userId))
+                .map(user -> addressList.stream()
+                        .peek(address -> address.setUser(user))
+                        .toList())
+                .map(addressRepository::saveAll)
+                .orElse(Collections.emptyList());
     }
 
     @Override
@@ -53,13 +62,13 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public List<AddressDto> convertToDto(List<Address> addressList){
-        return addressList.stream().map(this :: convertToDto).toList();
+    public List<AddressDto> convertToDto(List<Address> addressList) {
+        return addressList.stream().map(this::convertToDto).toList();
 
     }
 
     @Override
-    public AddressDto convertToDto(Address address){
+    public AddressDto convertToDto(Address address) {
         return modelMapper.map(address, AddressDto.class);
     }
 }

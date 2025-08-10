@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class imageService implements IImageService {
+public class ImageService implements IImageService {
     private final ImageRepository imageRepository;
     private final IProductService productService;
 
@@ -33,6 +33,7 @@ public class imageService implements IImageService {
         imageRepository.findById(imageId).ifPresentOrElse(imageRepository::delete, () -> {
             throw new EntityNotFoundException("Image not found!");
         });
+
     }
 
     @Override
@@ -43,6 +44,7 @@ public class imageService implements IImageService {
             image.setFileType(file.getContentType());
             image.setImage(new SerialBlob(file.getBytes()));
             imageRepository.save(image);
+
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e.getMessage());
         }

@@ -6,7 +6,7 @@ import com.myProject.ShopShopDay.model.Address;
 import java.util.List;
 
 public interface IAddressService {
-    List<Address>  createAddress(List<Address> addressList);
+    List<Address>  createAddress(List<Address> addressList, Long userId);
     List<Address> getUserAddresses(Long userId);
     Address getAddressById(Long addressId);
     void deleteAddress(Long addressId);
@@ -16,3 +16,4 @@ public interface IAddressService {
 
     AddressDto convertToDto(Address address);
 }
+

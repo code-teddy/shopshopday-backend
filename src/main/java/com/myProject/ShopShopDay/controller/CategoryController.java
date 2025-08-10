@@ -50,4 +50,5 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok(new ApiResponse("Found", null));
     }
+
 }

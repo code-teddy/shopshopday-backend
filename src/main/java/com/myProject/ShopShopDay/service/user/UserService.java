@@ -1,8 +1,10 @@
 package com.myProject.ShopShopDay.service.user;
 
 import com.myProject.ShopShopDay.dtos.UserDto;
+import com.myProject.ShopShopDay.model.Role;
 import com.myProject.ShopShopDay.model.User;
 import com.myProject.ShopShopDay.repository.AddressRepository;
+import com.myProject.ShopShopDay.repository.RoleRepository;
 import com.myProject.ShopShopDay.repository.UserRepository;
 import com.myProject.ShopShopDay.request.CreateUserRequest;
 import com.myProject.ShopShopDay.request.UserUpdateRequest;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +27,13 @@ public class UserService implements IUserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final AddressRepository addressRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public User createUser(CreateUserRequest request) {
+        Role userRole = Optional.ofNullable(roleRepository.findByName("ROLE_USER"))
+                .orElseThrow(() -> new EntityNotFoundException("Role nor found!"));
+
         return Optional.of(request)
                 .filter(user -> !userRepository.existsByEmail(request.getEmail()))
                 .map(req -> {
@@ -35,8 +42,8 @@ public class UserService implements IUserService {
                     user.setLastName(request.getLastName());
                     user.setEmail(request.getEmail());
                     user.setPassword(passwordEncoder.encode(request.getPassword()));
+                    user.setRoles(Set.of(userRole));
                     User savedUser = userRepository.save(user);
-
                     Optional.ofNullable(req.getAddressList()).ifPresent(addressList -> {
                         addressList.forEach(address -> {
                             address.setUser(savedUser);
@@ -78,6 +85,7 @@ public class UserService implements IUserService {
     @Override
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("The authenticated user: " +authentication.getName());
         String email = authentication.getName();
         return Optional.ofNullable(userRepository.findByEmail(email))
                 .orElseThrow(() -> new EntityNotFoundException("Log in required!"));

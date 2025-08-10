@@ -25,4 +25,3 @@ public class Category {
         this.name = name;
     }
 }
-
