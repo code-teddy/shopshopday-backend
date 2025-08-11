@@ -8,7 +8,11 @@ import com.myProject.ShopShopDay.model.OrderItem;
 import com.myProject.ShopShopDay.model.Product;
 import com.myProject.ShopShopDay.repository.OrderRepository;
 import com.myProject.ShopShopDay.repository.ProductRepository;
+import com.myProject.ShopShopDay.request.PaymentRequest;
 import com.myProject.ShopShopDay.service.cart.ICartService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,7 @@ public class OrderService implements IOrderService {
     private final ProductRepository productRepository;
     private final ICartService cartService;
     private final ModelMapper modelMapper;
+
 
 
     @Transactional
@@ -73,8 +78,28 @@ public class OrderService implements IOrderService {
     @Override
     public List<OrderDto> getUserOrders(Long userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
-        return  orders.stream().map(this :: convertToDto).toList();
+        return orders.stream().map(this::convertToDto).toList();
     }
+
+    @Override
+    public String createPaymentIntent(PaymentRequest request) throws StripeException {
+        long amountInSmallestUnit = Math.round(request.getAmount() * 100);
+        PaymentIntent intent = PaymentIntent.create(
+                PaymentIntentCreateParams.builder()
+                        .setAmount(amountInSmallestUnit)
+                        .setCurrency(request.getCurrency())
+                        .addPaymentMethodType("card")
+                        .build());
+        return  intent.getClientSecret();
+    }
+
+
+
+
+
+
+
+
 
     @Override
     public OrderDto convertToDto(Order order) {

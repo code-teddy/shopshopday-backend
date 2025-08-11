@@ -2,13 +2,17 @@ package com.myProject.ShopShopDay.controller;
 
 import com.myProject.ShopShopDay.dtos.OrderDto;
 import com.myProject.ShopShopDay.model.Order;
+import com.myProject.ShopShopDay.request.PaymentRequest;
 import com.myProject.ShopShopDay.response.ApiResponse;
 import com.myProject.ShopShopDay.service.order.IOrderService;
+import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,12 +26,17 @@ public class OrderController {
         OrderDto orderDto =  orderService.convertToDto(order);
         return ResponseEntity.ok(new ApiResponse("Order placed successfully!", orderDto));
     }
-    //Assignment 6
-    // Create an order DTO to return a user orders;
 
     @GetMapping("/user/{userId}/orders")
-    private ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long userId){
+    public ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long userId){
         List<OrderDto> orders = orderService.getUserOrders(userId);
+        System.out.println("The orders : ============================" + Arrays.toString(orders.toArray()));
         return ResponseEntity.ok(new ApiResponse("Success!", orders));
+    }
+
+    @PostMapping("/create-payment-intent")
+    public ResponseEntity<?> createPaymentIntent(@RequestBody PaymentRequest request) throws StripeException {
+        String clientSecret = orderService.createPaymentIntent(request);
+        return ResponseEntity.ok(Map.of("clientSecret", clientSecret));
     }
 }
