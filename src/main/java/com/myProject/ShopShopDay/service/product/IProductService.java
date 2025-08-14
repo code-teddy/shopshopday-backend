@@ -4,7 +4,9 @@ import com.myProject.ShopShopDay.dtos.ProductDto;
 import com.myProject.ShopShopDay.model.Product;
 import com.myProject.ShopShopDay.request.AddProductRequest;
 import com.myProject.ShopShopDay.request.ProductUpdateRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IProductService {
@@ -37,4 +39,7 @@ public interface IProductService {
     ProductDto convertToDto(Product product);
 
     List<Product> getProductsByCategoryId(Long categoryId);
+
+    List<Product> searchProductsByImage(MultipartFile image) throws IOException;
+    //List<Product> searchProductsByImage(MultipartFile image) throws IOException;
 }

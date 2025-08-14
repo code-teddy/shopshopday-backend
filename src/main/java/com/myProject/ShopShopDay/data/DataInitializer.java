@@ -54,5 +54,4 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
             userRepository.save(user);
         }
     }
-
 }

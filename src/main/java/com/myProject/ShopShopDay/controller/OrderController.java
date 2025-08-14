@@ -30,7 +30,6 @@ public class OrderController {
     @GetMapping("/user/{userId}/orders")
     public ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long userId){
         List<OrderDto> orders = orderService.getUserOrders(userId);
-        System.out.println("The orders : ============================" + Arrays.toString(orders.toArray()));
         return ResponseEntity.ok(new ApiResponse("Success!", orders));
     }
 

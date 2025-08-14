@@ -35,8 +35,11 @@ public class ShopConfig {
     private static String API;
     private static final List<String> SECURED_URLS =
             List.of(API + "/carts/**", API + "/cartItems/**", API + "/orders/**");
+
     private final ShopUserDetailsService userDetailsService;
+
     private final JwtEntryPoint authEntryPoint;
+
 
     @Bean
     public ModelMapper modelMapper() {
@@ -86,11 +89,12 @@ public class ShopConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**") // Apply to all endpoints
-                        .allowedOrigins("http://localhost:5100") // Allow this origin
+                        .allowedOrigins("http://localhost:5174") // Allow this origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these HTTP methods
                         .allowedHeaders("*") // Allow all headers
                         .allowCredentials(true); // Allow credentials
             }
         };
     }
+    /*,"http://buynowdotcom.s3-website-ap-southeast-1.amazonaws.com"*/
 }

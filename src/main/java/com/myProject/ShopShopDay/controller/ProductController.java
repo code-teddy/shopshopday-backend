@@ -7,17 +7,25 @@ import com.myProject.ShopShopDay.request.ProductUpdateRequest;
 import com.myProject.ShopShopDay.response.ApiResponse;
 import com.myProject.ShopShopDay.service.product.IProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
     private final IProductService productService;
+
+    private final ChatModel chatModel;
+
 
 
     @GetMapping("/all")
@@ -109,5 +117,14 @@ public class ProductController {
     @GetMapping("/distinct/brands")
     public ResponseEntity<ApiResponse> getDistinctBrands() {
         return ResponseEntity.ok(new ApiResponse("Found", productService.getAllDistinctBrands()));
+    }
+
+    @PostMapping("/search-by-image")
+    public ResponseEntity<ApiResponse> searchByImage(@RequestParam("image") MultipartFile image) throws IOException {
+        List<Product> products = productService.searchProductsByImage(image);
+        log.info("Found : {} " , products.size() + " products");
+        List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+        log.info("Found products dto : {} " , products);
+        return ResponseEntity.ok(new ApiResponse("Found", convertedProducts));
     }
 }

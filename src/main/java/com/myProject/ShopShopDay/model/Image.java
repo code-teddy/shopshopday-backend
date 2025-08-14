@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Blob;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +27,8 @@ public class Image {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    /*New attribute */
+    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VisualTag> visualTags;
 }

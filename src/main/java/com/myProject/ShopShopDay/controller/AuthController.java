@@ -6,7 +6,9 @@ import com.myProject.ShopShopDay.security.user.ShopUserDetailsService;
 import com.myProject.ShopShopDay.utils.CookieUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/auth")
@@ -35,7 +38,7 @@ public class AuthController {
     private Long refreshTokenExpirationTime;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequest request, HttpServletResponse response) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         String accessToken = jwtUtils.generateAccessTokenForUser(authentication);
@@ -69,5 +72,4 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid or expired access token");
     }
-
 }

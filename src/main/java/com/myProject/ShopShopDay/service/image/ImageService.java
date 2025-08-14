@@ -4,9 +4,11 @@ import com.myProject.ShopShopDay.dtos.ImageDto;
 import com.myProject.ShopShopDay.model.Image;
 import com.myProject.ShopShopDay.model.Product;
 import com.myProject.ShopShopDay.repository.ImageRepository;
+import com.myProject.ShopShopDay.service.embeddings.ImageSearchService;
 import com.myProject.ShopShopDay.service.product.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,11 +18,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImageService implements IImageService {
     private final ImageRepository imageRepository;
     private final IProductService productService;
+    private final ImageSearchService imageSearchService;
+
+
 
     @Override
     public Image getImageById(Long imageId) {
@@ -37,14 +43,13 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public void updateImage(MultipartFile file, Long imageId) {
+    public void updateImage(MultipartFile file, Long imageId) throws IOException {
         Image image = getImageById(imageId);
         try {
             image.setFileName(file.getOriginalFilename());
             image.setFileType(file.getContentType());
             image.setImage(new SerialBlob(file.getBytes()));
             imageRepository.save(image);
-
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -70,6 +75,9 @@ public class ImageService implements IImageService {
                 Image savedImage = imageRepository.save(image);
                 savedImage.setDownloadUrl(buildDownloadUrl + savedImage.getId());
                 imageRepository.save(savedImage);
+
+                String imageSummary = String.valueOf(imageSearchService.saveEmbeddings(file, productId));
+                log.info("Stored image summary embedded ids : {} ",imageSummary);
 
                 ImageDto imageDto = new ImageDto();
                 imageDto.setId(savedImage.getId());
