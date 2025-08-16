@@ -159,7 +159,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>shopshopday-image</finalName>
 	</build>
 
 </project>

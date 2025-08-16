@@ -5,7 +5,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the jar file from target directory
-COPY target/shopshopday-image.jar app.jar
+COPY target/*.jar app.jar
 
 # Expose port 9090
 EXPOSE 9090
