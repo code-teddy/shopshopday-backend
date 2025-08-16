@@ -35,9 +35,6 @@ jobs:
           CHROMA_HOST: ${{ vars.CHROMA_HOST }}
           CHROMA_PORT: ${{ vars.CHROMA_PORT }}
 
-      - uses: actions/checkout@v3
-        name: Check out code
-
       - name: Build & push Docker image
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
