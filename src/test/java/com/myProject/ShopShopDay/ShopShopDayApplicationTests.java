@@ -1,13 +1,14 @@
 // src/test/java/com/myProject/ShopShopDay/ShopShopDayApplicationTests.java
 package com.myProject.ShopShopDay;
 
+import com.myProject.ShopShopDay.data.DataInitializer;
+import com.myProject.ShopShopDay.service.embeddings.ImageSearchService;
+import com.myProject.ShopShopDay.utils.LLMServiceUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.ai.chroma.vectorstore.ChromaVectorStore;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.ai.chroma.vectorstore.ChromaVectorStore;
-import com.myProject.ShopShopDay.service.embeddings.ImageSearchService;
-import com.myProject.ShopShopDay.utils.LLMServiceUtil;
 
 @SpringBootTest
 @TestPropertySource(properties = {
@@ -54,6 +55,10 @@ class ShopShopDayApplicationTests {
 
 	@MockBean
 	private LLMServiceUtil llmServiceUtil;
+
+	// Mock the DataInitializer to prevent it from running during tests
+	@MockBean
+	private DataInitializer dataInitializer;
 
 	@Test
 	void contextLoads() {
