@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/ShopShopDay-0.1.jar /app/ShopShopDay-0.1.jar
 
 # Expose port 9090
-EXPOSE 8080
+EXPOSE 9090
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "ShopShopDay.jar"]
