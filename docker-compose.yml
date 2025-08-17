@@ -1,53 +1,53 @@
-services:
-  app:
-    build: .
-    ports:
-      - "9090:9090"
-    environment:
-      - DB_URL=${DB_URL}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
-      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - CHROMA_HOST=${CHROMA_HOST}
-      - CHROMA_PORT=${CHROMA_PORT}
-    depends_on:
-      db:
-        condition: service_healthy
-      chromadb:
-        condition: service_started
-
-  db:
-    image: mysql:8.0
-    environment:
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-      start_period: 40s
-      interval: 10s
-
-  chromadb:
-    image: ghcr.io/chroma-core/chroma:0.4.15
-    environment:
-      - IS_PERSISTENT=TRUE
-    ports:
-      - "8000:8000"
-    volumes:
-      - chroma-data:/chroma/chroma/
-
-volumes:
-  mysql_data:
-    driver: local
-  chroma-data:
-    driver: local
+#services:
+#  app:
+#    build: .
+#    ports:
+#      - "9090:9090"
+#    environment:
+#      - DB_URL=${DB_URL}
+#      - DB_USERNAME=${DB_USERNAME}
+#      - DB_PASSWORD=${DB_PASSWORD}
+#      - JWT_SECRET=${JWT_SECRET}
+#      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
+#      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
+#      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+#      - OPENAI_API_KEY=${OPENAI_API_KEY}
+#      - CHROMA_HOST=${CHROMA_HOST}
+#      - CHROMA_PORT=${CHROMA_PORT}
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#      chromadb:
+#        condition: service_started
+#
+#  db:
+#    image: mysql:8.0
+#    environment:
+#      - MYSQL_DATABASE=${DB_NAME}
+#      - MYSQL_USER=${DB_USERNAME}
+#      - MYSQL_PASSWORD=${DB_PASSWORD}
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+#      timeout: 20s
+#      retries: 10
+#      start_period: 40s
+#      interval: 10s
+#
+#  chromadb:
+#    image: ghcr.io/chroma-core/chroma:0.4.15
+#    environment:
+#      - IS_PERSISTENT=TRUE
+#    ports:
+#      - "8000:8000"
+#    volumes:
+#      - chroma-data:/chroma/chroma/
+#
+#volumes:
+#  mysql_data:
+#    driver: local
+#  chroma-data:
+#    driver: local
