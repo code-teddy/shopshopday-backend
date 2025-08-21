@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    image: ${DOCKER_USERNAME}/shopshopday-image:latest
     ports:
       - "9090:9090"
     environment:
