@@ -17,41 +17,26 @@ services:
       - CHROMA_HOST=${CHROMA_HOST}
       - CHROMA_PORT=${CHROMA_PORT}
     depends_on:
-      db:
-        condition: service_healthy
-      chromadb:
-        condition: service_started
-
-  db:
-    image: mysql:8.0
-    environment:
-      - MYSQL_DATABASE=${DB_URL}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-      start_period: 40s
-      interval: 10s
+      - chromadb
+    networks:
+      - shopshopday-network
+    restart: unless-stopped
 
   chromadb:
     image: ghcr.io/chroma-core/chroma:0.4.15
     environment:
       - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
     ports:
       - "8000:8000"
     volumes:
-      - chroma-data:/chroma/chroma/
-
+      - chroma_data:/chroma/chroma/
+    networks:
+      - shopshopday-network
+    restart: unless-stopped
+    
 volumes:
-  mysql_data:
-    driver: local
-  chroma-data:
+  chroma_data:
     driver: local
 
 networks:
