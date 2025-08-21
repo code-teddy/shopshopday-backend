@@ -20,6 +20,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+
       - name: Build the application
         run: mvn -B package --file pom.xml
 
@@ -69,8 +70,8 @@ jobs:
             JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }}
             STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-            CHROMA_HOST=${{ secrets.CHROMA_HOST }}
-            CHROMA_PORT=${{ secrets.CHROMA_PORT }}
+            CHROMA_HOST=chromadb
+            CHROMA_PORT=8000
             EOF
             
             # Pull latest Docker image
