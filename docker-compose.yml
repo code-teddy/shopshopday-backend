@@ -1,19 +1,21 @@
+version: '3.8'
+
 services:
   app:
     build: .
     ports:
       - "9090:9090"
     environment:
-      - DB_URL=${DB_URL:jdbc:mysql://localhost:3306/shopshopday_db}
-      - DB_USERNAME=${DB_USERNAME:root}
-      - DB_PASSWORD=${DB_PASSWORD:a25138363a}
-      - JWT_SECRET=${JWT_SECRET:test_secret}
-      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION:300000}
-      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION:2592000000}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:test_key}
-      - OPENAI_API_KEY=${OPENAI_API_KEY:test_key}
-      - CHROMA_HOST=${CHROMA_HOST:http://localhost}
-      - CHROMA_PORT=${CHROMA_PORT:8000}
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
+      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CHROMA_HOST=${CHROMA_HOST}
+      - CHROMA_PORT=${CHROMA_PORT}
     depends_on:
       db:
         condition: service_healthy
@@ -23,9 +25,9 @@ services:
   db:
     image: mysql:8.0
     environment:
-      - MYSQL_DATABASE=${DB_URL:jdbc:mysql://localhost:3306/shopshopday_db}
-      - MYSQL_USER=${DB_USERNAME:root}
-      - MYSQL_PASSWORD=${DB_PASSWORD:a25138363a}
+      - MYSQL_DATABASE=${DB_URL}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -52,16 +54,6 @@ volumes:
   chroma-data:
     driver: local
 
-
-#services:
-#  chromadb:
-#    image: ghcr.io/chroma-core/chroma:0.4.15
-#    environment:
-#      - IS_PERSISTENT=TRUE
-#    ports:
-#      - "8000:8000"
-#    volumes:
-#      - chroma-data:/chroma/chroma/
-#volumes:
-#  chroma-data:
-#    driver: local
+networks:
+  shopshopday-network:
+    driver: bridge
