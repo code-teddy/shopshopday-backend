@@ -36,9 +36,6 @@ git --version
 mkdir -p /home/$USER/shopshopday
 cd /home/$USER/shopshopday
 
-# Clone your repository (replace with your repo URL)
-git clone https://github.com/yourusername/your-repo-name.git .
-
 
 # GitHub Actions will create the .env file automatically
 # with secrets from GitHub repository settings
