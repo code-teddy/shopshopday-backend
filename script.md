@@ -1,3 +1,7 @@
+# Connect to EC2
+ssh -i "your-key.pem" ec2-user@your-ec2-public-ip
+ssh -i "your-key.pem" ubuntu@your-ec2-public-ip
+
 # Update system
 sudo yum update -y  # For Amazon Linux
 sudo apt update && sudo apt upgrade -y  # For Ubuntu
