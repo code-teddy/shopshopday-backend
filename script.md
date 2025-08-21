@@ -45,3 +45,5 @@ docker-compose ps
 
 # View logs
 docker-compose logs -f app
+
+
