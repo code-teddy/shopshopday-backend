@@ -11,4 +11,4 @@ COPY target/ShopShopDay-0.1.jar /app/ShopShopDay-0.1.jar
 EXPOSE 9090
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "ShopShopDay.jar"]
+ENTRYPOINT ["java", "-jar", "ShopShopDay-0.1.jar"]
