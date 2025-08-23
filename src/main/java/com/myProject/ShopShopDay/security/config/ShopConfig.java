@@ -91,7 +91,8 @@ public class ShopConfig {
                 registry.addMapping("/**") // Apply to all endpoints
                         .allowedOrigins(
                             "https://www.shopshopday.online/",
-                            "https://shopshopday.online/"
+                            "https://shopshopday.online/",
+                            "http://localhost:5100/"
                         ) // Allow this origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these HTTP methods
                         .allowedHeaders("*") // Allow all headers
