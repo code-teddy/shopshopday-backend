@@ -6,9 +6,9 @@ services:
     ports:
       - "9090:9090"
     environment:
-      - DB_URL=jdbc:mysql://shopshopdaydb.cryqmygokzvb.ap-southeast-1.rds.amazonaws.com:3306/shopshopdayClouddb?useSSL=false&serverTimezone=UTC
-      - DB_USERNAME=root
-      - DB_PASSWORD=aa123456+
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
       - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
