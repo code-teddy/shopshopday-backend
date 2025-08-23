@@ -64,7 +64,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: "./subdir/docker-compose.yml"
+          source: "docker-compose.yml"
           target: "/home/${{ secrets.EC2_USERNAME }}/shopshopday"
 
       - name: Deploy to EC2
