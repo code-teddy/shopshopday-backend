@@ -40,7 +40,7 @@ jobs:
           JWT_REFRESH_EXPIRATION: ${{ vars.JWT_REFRESH_EXPIRATION }}
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CHROMA_HOST: localhost
+          CHROMA_HOST: http://localhost
           CHROMA_PORT: 8080
 
       - name: Stop ChromaDB
