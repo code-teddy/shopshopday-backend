@@ -17,7 +17,7 @@ services:
       - CHROMA_HOST=${CHROMA_HOST}
       - CHROMA_PORT=${CHROMA_PORT}
     depends_on:
-      - chromadb
+      - shopshopday-chromadb-1
     networks:
       - shopshopday-network
     restart: unless-stopped
