@@ -61,9 +61,9 @@ jobs:
             # Create production environment variables
             cat > .env << EOF
             DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            DB_URL=${{ secrets.DB_URL }}
-            DB_USERNAME=${{ secrets.DB_USERNAME }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_URL=jdbc:mysql://shopshopdaydb.cryqmygokzvb.ap-southeast-1.rds.amazonaws.com:3306/shopshopdayClouddb?useSSL=false&serverTimezone=UTC
+            DB_USERNAME=root
+            DB_PASSWORD=aa123456+
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             JWT_ACCESS_EXPIRATION=${{ vars.JWT_ACCESS_EXPIRATION }}
             JWT_REFRESH_EXPIRATION=${{ vars.JWT_REFRESH_EXPIRATION }}
