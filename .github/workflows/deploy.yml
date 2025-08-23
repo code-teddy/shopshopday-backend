@@ -24,7 +24,7 @@ jobs:
 
       - name: Start ChromaDB for testing
         run: |
-          docker compose -f docker-compose.dev.yml up -d chromadb
+          docker compose -f docker-compose.dev.yml up -d
           echo "Waiting for ChromaDB to start..."
           timeout 60 bash -c 'until curl -f http://localhost:8000/api/v1/heartbeat; do sleep 2; done'
           echo "ChromaDB is ready!"
@@ -40,8 +40,6 @@ jobs:
           JWT_REFRESH_EXPIRATION: ${{ vars.JWT_REFRESH_EXPIRATION }}
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CHROMA_HOST: http://localhost
-          CHROMA_PORT: 8080
 
       - name: Stop ChromaDB
         if: always()
