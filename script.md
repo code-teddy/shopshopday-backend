@@ -47,3 +47,9 @@ docker-compose ps
 docker-compose logs -f app
 
 
+
+
+
+
+
+
