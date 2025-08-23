@@ -21,7 +21,18 @@ jobs:
           cache: maven
 
       - name: Build the application
-        run: mvn -B package -DskipTests
+        run: mvn -B package
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ACCESS_EXPIRATION: ${{ vars.JWT_ACCESS_EXPIRATION }}
+          JWT_REFRESH_EXPIRATION: ${{ vars.JWT_REFRESH_EXPIRATION }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CHROMA_HOST: ${{ vars.CHROMA_HOST }}
+          CHROMA_PORT: ${{ vars.CHROMA_PORT }}
 
       - name: Login to DockerHub
         if: github.ref == 'refs/heads/main'
