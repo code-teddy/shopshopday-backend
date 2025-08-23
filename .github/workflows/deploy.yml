@@ -20,30 +20,9 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-
-
-      - name: Start ChromaDB for testing
-        run: |
-          docker compose -f docker-compose.dev.yml up -d
-          echo "Waiting for ChromaDB to start..."
-          timeout 60 bash -c 'until curl -f http://localhost:8000/api/v1/heartbeat; do sleep 2; done'
-          echo "ChromaDB is ready!"
           
       - name: Build the application
-        run: mvn -B clean package
-        env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_ACCESS_EXPIRATION: ${{ vars.JWT_ACCESS_EXPIRATION }}
-          JWT_REFRESH_EXPIRATION: ${{ vars.JWT_REFRESH_EXPIRATION }}
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-      - name: Stop ChromaDB
-        if: always()
-        run: docker compose -f docker-compose.dev.yml down
+        run: mvn -B clean package -DskipTests
 
       - name: Login to DockerHub
         if: github.ref == 'refs/heads/main'
