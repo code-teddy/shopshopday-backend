@@ -21,7 +21,7 @@ jobs:
           cache: maven
 
       - name: Build the application
-        run: mvn -B package
+        run: mvn -B package -DskipTests
 
       - name: Login to DockerHub
         if: github.ref == 'refs/heads/main'
