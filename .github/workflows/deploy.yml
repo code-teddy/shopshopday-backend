@@ -21,7 +21,7 @@ jobs:
           cache: maven
 
       - name: Build the application
-        run: mvn -B package --file pom.xml
+        run: mvn -B package
 
       - name: Login to DockerHub
         if: github.ref == 'refs/heads/main'
