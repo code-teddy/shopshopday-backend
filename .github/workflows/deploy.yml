@@ -19,7 +19,7 @@ jobs:
           IS_PERSISTENT: FALSE
           ANONYMIZED_TELEMETRY: FALSE
         options: >-
-          --health-cmd "curl -f http://localhost:8000/api/v1/heartbeat || exit 1"
+          --health-cmd "curl -f http://chromadb:8000/api/v1/heartbeat || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -36,7 +36,7 @@ jobs:
           cache: maven
 
       - name: Wait for ChromaDB to be ready
-        run: timeout 60 bash -c 'until curl -f http://localhost:8000/api/v1/heartbeat; do sleep 2; done'
+        run: timeout 60 bash -c 'until curl -f http://chromadb:8000/api/v1/heartbeat; do sleep 2; done'
           
       - name: Build the application
         run: mvn -B clean package
@@ -49,7 +49,7 @@ jobs:
           JWT_REFRESH_EXPIRATION: ${{ vars.JWT_REFRESH_EXPIRATION }}
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CHROMA_HOST: http://localhost
+          CHROMA_HOST: ${{ vars.CHROMA_HOST }}
           CHROMA_PORT: ${{ vars.CHROMA_PORT }}
 
       - name: Login to DockerHub
