@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -50,32 +49,3 @@ public class LLMServiceUtil {
             .content();
   }
 }
-
-/*
-
-   private final ChatModel chatModel;
-
-    public String describeImage(MultipartFile image) throws IOException {
-        Resource resource = new InputStreamResource(image.getInputStream());
-        String content = ChatClient.create(chatModel)
-                .prompt()
-                .user(userPromptSpec -> userPromptSpec.text(
-                        """
-                                Describe this image in one sentence.
-                        """
-                ).media(MediaType.parseMediaType(Objects.requireNonNull(image.getContentType())), resource))
-                .call().content();
-        log.info("The image description {} : ",content);
-        return content;
-    }
-
-    ===========================================================================================
-
-     @GetMapping("/describe-image")
-    public ResponseEntity<ApiResponse> describeImage(@RequestParam("image") MultipartFile image) throws IOException {
-       String imageDescription = lLMServiceUtil.describeImage(image);
-       return ResponseEntity.ok(new ApiResponse("success", imageDescription));
-    }
-
-
-    */
