@@ -40,7 +40,6 @@ public class ShopConfig {
 
     private final JwtEntryPoint authEntryPoint;
 
-
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();

@@ -39,7 +39,4 @@ public interface IProductService {
     ProductDto convertToDto(Product product);
 
     List<Product> getProductsByCategoryId(Long categoryId);
-
-    List<Product> searchProductsByImage(MultipartFile image) throws IOException;
-    //List<Product> searchProductsByImage(MultipartFile image) throws IOException;
 }

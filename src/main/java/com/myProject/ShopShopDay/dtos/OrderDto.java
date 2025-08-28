@@ -12,6 +12,6 @@ public class OrderDto {
     private Long userId;
     private LocalDate orderDate;
     private BigDecimal totalAmount;
-    private String status;
+    private String orderStatus;
     private List<OrderItemDto> items;
 }

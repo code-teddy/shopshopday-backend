@@ -45,7 +45,7 @@ public class ImageController {
     }
 
     @PutMapping("/image/{imageId}/update")
-    public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file) throws IOException {
+    public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file) {
         imageService.updateImage(file, imageId);
         return ResponseEntity.ok(new ApiResponse("Image updated successfully!", null));
     }

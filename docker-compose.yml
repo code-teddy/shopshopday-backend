@@ -14,30 +14,9 @@ services:
       - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - CHROMA_HOST=${CHROMA_HOST}
-      - CHROMA_PORT=${CHROMA_PORT}
-    depends_on:
-      - chromadb
     networks:
       - shopshopday-network
     restart: unless-stopped
-
-  chromadb:
-    image: ghcr.io/chroma-core/chroma:0.4.15
-    environment:
-      - IS_PERSISTENT=TRUE
-      - ANONYMIZED_TELEMETRY=FALSE
-    ports:
-      - "8000:8000"
-    volumes:
-      - chroma_data:/chroma/chroma/
-    networks:
-      - shopshopday-network
-    restart: unless-stopped
-    
-volumes:
-  chroma_data:
-    driver: local
 
 networks:
   shopshopday-network:

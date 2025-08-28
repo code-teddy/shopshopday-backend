@@ -8,4 +8,3 @@ public class ImageDto {
     private String fileName;
     private String downloadUrl;
 }
-

@@ -6,22 +6,16 @@ import com.myProject.ShopShopDay.model.*;
 import com.myProject.ShopShopDay.repository.*;
 import com.myProject.ShopShopDay.request.AddProductRequest;
 import com.myProject.ShopShopDay.request.ProductUpdateRequest;
-import com.myProject.ShopShopDay.service.embeddings.ImageSearchService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
@@ -31,8 +25,6 @@ public class ProductService implements IProductService {
     private final OrderItemRepository orderItemRepository;
     private final ImageRepository imageRepository;
     private final ModelMapper modelMapper;
-    private final ImageSearchService imageSearchService;
-
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -146,35 +138,25 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> findDistinctProductsByName() {
+    public List<Product> findDistinctProductsByName(){
         List<Product> products = getAllProducts();
         Map<String, Product> distinctProductMap = products.stream()
                 .collect(Collectors.toMap(
-                        Product::getName,
+                        Product :: getName,
                         product -> product,
                         (existing, replacement) -> existing));
         return new ArrayList<>(distinctProductMap.values());
     }
 
     @Override
-    public List<String> getAllDistinctBrands() {
+    public List<String> getAllDistinctBrands(){
         return productRepository.findAll()
                 .stream()
-                .map(Product::getBrand)
+                .map(Product :: getBrand)
                 .distinct()
                 .toList();
     }
 
-    @Override
-    public List<Product> getProductsByCategoryId(Long categoryId) {
-        return productRepository.findAllByCategoryId(categoryId);
-    }
-
-    @Override
-    public List<Product> searchProductsByImage(MultipartFile image) throws IOException {
-        List<Long> productIds = imageSearchService.searchImageSimilarity(image);
-        return productRepository.findAllById(productIds);
-    }
 
     @Override
     public List<ProductDto> getConvertedProducts(List<Product> products) {
@@ -190,5 +172,10 @@ public class ProductService implements IProductService {
                 .toList();
         productDto.setImages(imageDtos);
         return productDto;
+    }
+
+    @Override
+    public List<Product> getProductsByCategoryId(Long categoryId) {
+        return productRepository.findAllByCategoryId(categoryId);
     }
 }
