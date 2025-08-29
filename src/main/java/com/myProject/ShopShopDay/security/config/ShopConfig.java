@@ -31,10 +31,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity(prePostEnabled = true)
 public class ShopConfig {
+    // @Value("${api.prefix}")
+    // private static String API;
+    // private static final List<String> SECURED_URLS =
+    //         List.of(API + "/carts/**", API + "/cartItems/**", API + "/orders/**");
+
     @Value("${api.prefix}")
-    private static String API;
-    private static final List<String> SECURED_URLS =
-            List.of(API + "/carts/**", API + "/cartItems/**", API + "/orders/**");
+    private String apiPrefix;
+    
+    private String[] securedUrls() {
+        return new String[] {
+            apiPrefix + "/carts/**",
+            apiPrefix + "/cartItems/**",
+            apiPrefix + "/orders/**"
+        };
+    }
 
     private final ShopUserDetailsService userDetailsService;
 
@@ -68,37 +79,73 @@ public class ShopConfig {
         return authProvider;
     }
 
+    // @Bean
+    // public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+    //     http.csrf(AbstractHttpConfigurer::disable)
+    //             .cors() // Enable CORS
+    //             .and()
+    //             .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
+    //             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    //             .authorizeHttpRequests(auth -> auth.requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
+    //                     .anyRequest().permitAll());
+    //     http.authenticationProvider(authenticationProvider());
+    //     http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    //     return http.build();
+
+    // }
+
+    // @Bean
+    // public WebMvcConfigurer corsConfigurer() {
+    //     return new WebMvcConfigurer() {
+    //         @Override
+    //         public void addCorsMappings(@NonNull CorsRegistry registry) {
+    //             registry.addMapping("/**") // Apply to all endpoints
+    //                     .allowedOrigins(
+    //                         "https://www.shopshopday.online/",
+    //                         "https://shopshopday.online/",
+    //                         "http://localhost:5100/"
+    //                     ) // Allow this origin
+    //                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these HTTP methods
+    //                     .allowedHeaders("*") // Allow all headers
+    //                     .allowCredentials(true); // Allow credentials
+    //         }
+    //     };
+    // }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http.csrf(AbstractHttpConfigurer::disable)
-                .cors() // Enable CORS
-                .and()
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
-                        .anyRequest().permitAll());
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(withDefaults -> {}) // <- important
+            .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(securedUrls()).authenticated()
+                .anyRequest().permitAll()
+            );
+    
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
-
     }
+
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**") // Apply to all endpoints
-                        .allowedOrigins(
-                            "https://www.shopshopday.online/",
-                            "https://shopshopday.online/",
-                            "http://localhost:5100/"
-                        ) // Allow this origin
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these HTTP methods
-                        .allowedHeaders("*") // Allow all headers
-                        .allowCredentials(true); // Allow credentials
-            }
-        };
+    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        var config = new org.springframework.web.cors.CorsConfiguration();
+        // Exact origins (no trailing slash), or use allowedOriginPatterns for wildcards
+        // config.setAllowedOrigins(List.of("https://www.shopshopday.online", "https://shopshopday.online", "http://localhost:5100"));
+        config.setAllowedOriginPatterns(List.of("https://*.shopshopday.online", "http://localhost:*"));
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
+        config.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","Origin","X-Requested-With"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
+    
+        var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
+    
 }
