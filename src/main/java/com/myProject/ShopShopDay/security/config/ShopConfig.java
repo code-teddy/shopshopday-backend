@@ -31,21 +31,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity(prePostEnabled = true)
 public class ShopConfig {
-    // @Value("${api.prefix}")
-    // private static String API;
-    // private static final List<String> SECURED_URLS =
-    //         List.of(API + "/carts/**", API + "/cartItems/**", API + "/orders/**");
-
     @Value("${api.prefix}")
-    private String apiPrefix;
-    
-    private String[] securedUrls() {
-        return new String[] {
-            apiPrefix + "/carts/**",
-            apiPrefix + "/cartItems/**",
-            apiPrefix + "/orders/**"
-        };
-    }
+    private static String API;
+    private static final List<String> SECURED_URLS =
+            List.of(API + "/carts/**", API + "/cartItems/**", API + "/orders/**");
 
     private final ShopUserDetailsService userDetailsService;
 
@@ -83,8 +72,6 @@ public class ShopConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors() // Enable CORS
-                .and()
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
@@ -102,9 +89,9 @@ public class ShopConfig {
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**") // Apply to all endpoints
                         .allowedOrigins(
-                            "https://www.shopshopday.online/",
-                            "https://shopshopday.online/",
-                            "http://localhost:5100/"
+                            "https://www.shopshopday.online",
+                            "https://shopshopday.online",
+                            "http://localhost:5100"
                         ) // Allow this origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these HTTP methods
                         .allowedHeaders("*") // Allow all headers
