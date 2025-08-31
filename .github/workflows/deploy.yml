@@ -71,6 +71,8 @@ jobs:
             JWT_REFRESH_EXPIRATION=${{ vars.JWT_REFRESH_EXPIRATION }}
             STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            CHROMA_HOST=${{ vars.CHROMA_HOST }}
+            CHROMA_PORT=${{ vars.CHROMA_PORT }}
             EOF
             
             # Pull latest Docker image
