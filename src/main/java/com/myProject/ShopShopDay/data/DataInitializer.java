@@ -4,6 +4,7 @@ import com.myProject.ShopShopDay.model.Role;
 import com.myProject.ShopShopDay.model.User;
 import com.myProject.ShopShopDay.repository.RoleRepository;
 import com.myProject.ShopShopDay.repository.UserRepository;
+import com.myProject.ShopShopDay.service.cart.ICartService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -22,6 +23,7 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ICartService cartService;
 
 
     @Override
@@ -52,6 +54,7 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
             user.setPassword(passwordEncoder.encode("123456"));
             user.setRoles(Set.of(adminRole));
             userRepository.save(user);
+            cartService.initializeNewCartForUser(user);
         }
     }
 }
