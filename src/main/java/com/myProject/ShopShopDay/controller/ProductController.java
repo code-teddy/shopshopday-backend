@@ -7,14 +7,10 @@ import com.myProject.ShopShopDay.request.ProductUpdateRequest;
 import com.myProject.ShopShopDay.response.ApiResponse;
 import com.myProject.ShopShopDay.service.product.IProductService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
