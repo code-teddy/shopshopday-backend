@@ -49,6 +49,23 @@ docker-compose logs -f app
 
 
 
+# Setup Reverse Proxy Configs (Not Necessary)
+
+sudo nano /etc/nginx/sites-available/default
+
+<!-- Locate the server block and replace the Location Block with the the one below -->
+location / {
+   proxy_pass http://localhost:9090;
+   proxy_http_version 1.1;
+   proxy_set_header Upgrade $http_upgrade;
+   proxy_set_header Connection 'upgrade';
+   proxy_set_header Host $host;
+   proxy_cache_bypass $http_upgrade;
+}
+<!-- Setting up HTTPS -->
+server_name www.shopshopday.com;
+
+
 
 
 
