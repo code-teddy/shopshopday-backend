@@ -61,18 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
-    steps:
-      - name: Copy docker-compose.yml to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: "docker-compose.yml"
-          target: "/home/${{ secrets.EC2_USERNAME }}/shopshopday"
-          overwrite: true
-          strip_components: 0
-    
+    steps:    
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -80,7 +69,57 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
+            mkdir -p /home/${{ secrets.EC2_USERNAME }}/shopshopday
             cd /home/${{ secrets.EC2_USERNAME }}/shopshopday
+
+            # Write docker-compose.yml inline
+            cat > docker-compose.yml << 'COMPOSEOF'
+            version: '3.8'
+
+            services:
+              app:
+                image: ${DOCKER_USERNAME}/shopshopday-image:latest
+                ports:
+                  - "9090:9090"
+                environment:
+                  - DB_URL=${DB_URL}
+                  - DB_USERNAME=${DB_USERNAME}
+                  - DB_PASSWORD=${DB_PASSWORD}
+                  - JWT_SECRET=${JWT_SECRET}
+                  - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
+                  - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
+                  - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+                  - OPENAI_API_KEY=${OPENAI_API_KEY}
+                  - CHROMA_HOST=${CHROMA_HOST}
+                  - CHROMA_PORT=${CHROMA_PORT}
+                depends_on:
+                  - chromadb
+                networks:
+                  - shopshopday-network
+                restart: unless-stopped
+
+              chromadb:
+                image: ghcr.io/chroma-core/chroma:0.4.15
+                environment:
+                  - IS_PERSISTENT=TRUE
+                  - ANONYMIZED_TELEMETRY=FALSE
+                ports:
+                  - "8000:8000"
+                volumes:
+                  - chroma_data:/chroma/chroma/
+                networks:
+                  - shopshopday-network
+                restart: unless-stopped
+
+            volumes:
+              chroma_data:
+                driver: local
+
+            networks:
+              shopshopday-network:
+                driver: bridge
+            COMPOSEOF
+
             
             # Create production environment variables
             cat > .env << EOF
