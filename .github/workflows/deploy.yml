@@ -72,29 +72,6 @@ jobs:
             mkdir -p /home/${{ secrets.EC2_USERNAME }}/shopshopday
             cd /home/${{ secrets.EC2_USERNAME }}/shopshopday
 
-            # Write nginx.conf inline
-            cat > nginx.conf << 'NGINXEOF'
-            events {
-                worker_connections 1024;
-            }
-
-            http {
-                server {
-                    listen 80;
-                    server_name api.shopshopday.online;
-
-                    location / {
-                        proxy_pass http://app:9090;
-                        proxy_set_header Host $host;
-                        proxy_set_header X-Real-IP $remote_addr;
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header X-Forwarded-Proto $scheme;
-                    }
-                }
-            }
-            NGINXEOF
-
-
             # Write docker-compose.yml inline
             cat > docker-compose.yml << 'COMPOSEOF'
             version: '3.8'
