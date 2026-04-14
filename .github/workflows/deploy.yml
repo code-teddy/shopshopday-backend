@@ -191,6 +191,7 @@ jobs:
                 driver: bridge
             COMPOSEOF
 
+
             
             # Create production environment variables
             cat > .env << EOF
